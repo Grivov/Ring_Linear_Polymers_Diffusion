@@ -101,8 +101,11 @@ def create_file(name, mode, length, diameter, x_box_dim, positions_y, positions_
 
     polymers_num = 2 * len(positions_y) * len(positions_z)
     num_atoms = length * polymers_num
-    num_bonds = num_atoms - polymers_num
-    num_bonds_per_pol = length - 1
+    num_atoms = length * polymers_num
+    if linear:
+        num_bonds = num_atoms - polymers_num
+    if not linear:
+        num_bonds = num_atoms
 
     box_dim_y = max(np.abs(coords_all['y'])) + 0.5 * diameter
     box_dim_z = max(np.abs(coords_all['z'])) + 0.5 * diameter
@@ -128,6 +131,7 @@ def create_file(name, mode, length, diameter, x_box_dim, positions_y, positions_
 
                     
         if linear:
+	    num_bonds_per_pol = length - 1
             bond_counter = 1
             for pol in range(polymers_num):
                 for monomer in range(num_bonds_per_pol):
@@ -138,7 +142,6 @@ def create_file(name, mode, length, diameter, x_box_dim, positions_y, positions_
                         bond_counter += 1
                     
         if not linear:
-            num_bonds = num_atoms
             num_bonds_per_pol = length
             bond_counter = 1
             for pol in range(polymers_num):
